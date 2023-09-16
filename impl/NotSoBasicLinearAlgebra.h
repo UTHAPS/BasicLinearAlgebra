@@ -232,6 +232,36 @@ CholeskyDecomposition<ParentType> CholeskyDecompose(MatrixBase<ParentType, Dim, 
     return chol;
 }
 
+template <typename ParentType, int Dim>
+CholeskyDecomposition<ParentType> ModifiedCholeskyDecompose(MatrixBase<ParentType, Dim, Dim, typename ParentType::DType> &A)
+{
+    CholeskyDecomposition<ParentType> chol(A);
+
+    for (int i = 0; i < Dim; ++i)
+    {
+        for (int j = i; j < Dim; ++j)
+        {
+            float sum = A(i, j);
+
+            for (int k = i - 1; k >= 0; --k)
+            {
+                sum -= A(i, k) * A(j, k) * A(k, k);
+            }
+
+            if (i == j)
+            {
+                A(i,j) = sum;
+            }
+            else
+            {
+                A(j, i) = sum / A(i, i);
+            }
+        }
+    }
+
+    return chol;
+}
+
 template <int Dim, class LUType, class BType>
 Matrix<Dim, 1, typename BType::DType> CholeskySolve(const CholeskyDecomposition<LUType> &decomp,
                                                     const MatrixBase<BType, Dim, 1, typename BType::DType> &b)
