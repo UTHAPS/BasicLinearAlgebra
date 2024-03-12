@@ -1,5 +1,13 @@
 #pragma once
 #include <assert.h>
+#include <iostream>
+
+#ifdef BLA_NO_DEBUG
+    #define bla_assert(x)
+#else
+    #define bla_assert(x) assert(x)
+#endif
+
 
 namespace BLA
 {
@@ -15,12 +23,12 @@ class Matrix : public MatrixBase<Matrix<Rows, Cols, DType>, Rows, Cols, DType>
 
     DType &operator()(int i, int j = 0)
     {
-        assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
+        bla_assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
         return storage[i * Cols + j];
     }
     DType operator()(int i, int j = 0) const
     {
-        assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
+        bla_assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
         return storage[i * Cols + j];
     }
 
@@ -105,12 +113,14 @@ class RefMatrix : public MatrixBase<RefMatrix<RefType, Rows, Cols>, Rows, Cols, 
 
     typename RefType::DType &operator()(int i, int j)
     {
-        assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
+        #ifdef BLA_NODEBUG
+        bla_assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
+        #endif
         return parent_(i + row_offset_, j + col_offset_);
     }
     typename RefType::DType operator()(int i, int j) const
     { 
-        assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
+        bla_assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
         return parent_(i + row_offset_, j + col_offset_);
     }
 
