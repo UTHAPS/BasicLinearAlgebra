@@ -1,30 +1,6 @@
 #pragma once
-#include <assert.h>
+#include "my_assert.hpp"
 #include <iostream>
-
-#include <Arduino.h>
-//ref : https://qiita.com/yasuhiro-k/items/205714229207bae60c14
-extern "C" {
-extern void __real___assert_func(const char *file, int line, const char *func, const char *failedexpr);
-}
-
-extern "C" void
-__wrap___assert_func(const char *file, int line, const char *func, const char *failedexpr)
-{
-  char buf[512];
-  //if (core_util_is_isr_active()) {  // 割り込み処理中かを判断
-  //  __real___assert_func(file, line, func, failedexpr);  // ①既存の処理を呼び出す
-  //} else { // 動かず，okamotoには分からんかった
-    snprintf(buf, sizeof(buf), "assertion \"%s\" failed: file \"%s\", line %d%s%s\n",
-          failedexpr, file, line, func ? ", function: " : "",
-          func ? func : "");
-    Serial.println(buf);       // USBシリアルに出力②
-    for (;;) {               // 無限ループ③
-      delay(1000);
-      Serial.println("stopping");
-    }
-  //}
-}
 
 #ifdef BLA_NO_DEBUG
     #define bla_assert(x)
