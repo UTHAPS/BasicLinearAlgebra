@@ -1,7 +1,7 @@
 #pragma once
 
 
-void __assert_func(const char *file, int line, const char *func, const char *failedexpr)
+inline void __assert_func(const char *file, int line, const char *func, const char *failedexpr)
 {
   char buf[512];
   //if (core_util_is_isr_active()) {  // 割り込み処理中かを判断
