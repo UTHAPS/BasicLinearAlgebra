@@ -132,9 +132,7 @@ class RefMatrix : public MatrixBase<RefMatrix<RefType, Rows, Cols>, Rows, Cols, 
 
     typename RefType::DType &operator()(int i, int j)
     {
-        #ifdef BLA_NODEBUG
         bla_assert((0 <= i && i < Rows) && (0 <= j && j < Cols));
-        #endif
         return parent_(i + row_offset_, j + col_offset_);
     }
     typename RefType::DType operator()(int i, int j) const
