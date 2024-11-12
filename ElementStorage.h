@@ -156,6 +156,27 @@ struct VerticalConcat : public MatrixBase<VerticalConcat<TopType, BottomType>, T
     }
 };
 
+template <typename LeftType, typename RightType>
+struct DiagonalConcat : public MatrixBase<DiagonalConcat<LeftType, RightType>, LeftType::Rows + RightType::Rows,
+                                          LeftType::Cols + RightType::Cols, typename LeftType::DType>
+{
+    const LeftType &left;
+    const RightType &right;
+
+    DiagonalConcat(const LeftType &l, const RightType &r) : left(l), right(r) {}
+
+    typename LeftType::DType operator()(int row, int col) const
+    {
+        if ((row < LeftType::Rows) && (col < LeftType::Cols)){
+            return left(row, col);
+        }else if ((LeftType::Rows <= row) && (LeftType::Cols <= col)){
+            return right(row - LeftType::Rows, col - LeftType::Cols);
+        }else{
+            return 0;
+        }
+    }
+};
+
 template <int Rows, int Cols, typename DType, int TableSize>
 struct SparseMatrix : public MatrixBase<SparseMatrix<Rows, Cols, DType, TableSize>, Rows, Cols, DType>
 {

@@ -189,6 +189,16 @@ VerticalConcat<DerivedType, OperandType> operator&&(
                                                     static_cast<const OperandType &>(bottom));
 }
 
+template <typename DerivedType, typename OperandType, typename DType>
+DiagonalConcat<DerivedType, OperandType> operator^(
+    const MatrixBase<DerivedType, DerivedType::Rows, DerivedType::Cols, DType> &left,
+    const MatrixBase<OperandType, OperandType::Rows, OperandType::Cols, DType> &right)
+{
+    return DiagonalConcat<DerivedType, OperandType>(static_cast<const DerivedType &>(left),
+                                                      static_cast<const OperandType &>(right));
+}
+
+
 template <typename MatAType, typename MatBType, int Rows, int Cols, typename DType>
 Matrix<Rows, Cols, bool> operator==(const MatrixBase<MatAType, Rows, Cols, DType> &matA,
                                     const MatrixBase<MatBType, Rows, Cols, DType> &matB)
